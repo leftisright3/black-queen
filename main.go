@@ -43,8 +43,12 @@ func main() {
 	cardUrl := "https://deckofcardsapi.com/static/img/"
 
 	cardDeckHandler := func(w http.ResponseWriter, r *http.Request) {
-		templ := template.Must(template.ParseFiles("index.html", "partials/card-deck.html", "partials/new-card.html"))
-		templ.Execute(w, nil)
+		templ := template.Must(template.ParseFiles("index.html", "partials/new-card.html"))
+		err := templ.Execute(w, nil)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
 
 	drawCardHandler := func(w http.ResponseWriter, r *http.Request) {
