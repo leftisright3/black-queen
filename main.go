@@ -1,6 +1,8 @@
 package main
 
 import (
+	"blackqueen/decks"
+	"blackqueen/game"
 	"html/template"
 	"log"
 	"net/http"
@@ -16,27 +18,44 @@ type Todo struct {
 
 func main() {
 
-	data := map[string][]Todo{
-		"Todos": {
-			Todo{Id: 1, Message: "Buy Milk"},
-		},
+	//data := map[string][]Todo{
+	//	"Todos": {
+	//		Todo{Id: 1, Message: "Buy Milk"},
+	//		Todo{Id: 2, Message: "Buy Eggs"},
+	//	},
+	//}
+	//
+	//todosHandler := func(w http.ResponseWriter, r *http.Request) {
+	//	templ := template.Must(template.ParseFiles("index.html", "partials/todo-list.html"))
+	//	templ.Execute(w, data)
+	//}
+	//
+	//addTodosHandler := func(w http.ResponseWriter, r *http.Request) {
+	//	message := r.PostFormValue("message")
+	//	templ := template.Must(template.ParseFiles("index.html"))
+	//	todo := Todo{Id: len(data["Todos"]) + 1, Message: message}
+	//	//data["Todos"] = append(data["Todos"], todo)
+	//	templ.ExecuteTemplate(w, "todo-list-element", todo)
+	//}
+
+	var blackqueen game.Game
+	blackqueen.Init()
+	cardUrl := "https://deckofcardsapi.com/static/img/"
+
+	cardDeckHandler := func(w http.ResponseWriter, r *http.Request) {
+		templ := template.Must(template.ParseFiles("index.html", "partials/card-deck.html", "partials/new-card.html"))
+		templ.Execute(w, nil)
 	}
 
-	todosHandler := func(w http.ResponseWriter, r *http.Request) {
-		templ := template.Must(template.ParseFiles("index.html"))
+	drawCardHandler := func(w http.ResponseWriter, r *http.Request) {
+		card := decks.DrawCard(blackqueen.Deck.Cards)
+		data := cardUrl + card.ShortString() + ".png"
+		templ := template.Must(template.ParseFiles("index.html", "partials/card-deck.html", "partials/new-card.html"))
 		templ.Execute(w, data)
 	}
 
-	addTodosHandler := func(w http.ResponseWriter, r *http.Request) {
-		message := r.PostFormValue("message")
-		templ := template.Must(template.ParseFiles("index.html"))
-		todo := Todo{Id: len(data["Todos"]) + 1, Message: message}
-		//data["Todos"] = append(data["Todos"], todo)
-		templ.ExecuteTemplate(w, "todo-list-element", todo)
-	}
-
-	http.HandleFunc("/", todosHandler)
-	http.HandleFunc("/add-todo", addTodosHandler)
+	http.HandleFunc("/", cardDeckHandler)
+	http.HandleFunc("/new-card", drawCardHandler)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 

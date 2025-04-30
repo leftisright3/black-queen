@@ -35,6 +35,12 @@ func Shuffle(cards []Card) []Card {
 	return cards
 }
 
+func DrawCard(cards []Card) Card {
+	r := rand.New(rand.NewSource(time.Now().Unix()))
+	idx := r.Intn(52)
+	return cards[idx]
+}
+
 func SortBySuitAndRankAscending(cards []Card) []Card {
 	diamonds := FilterOutBySuit(cards, Diamond)
 	diamonds = SortByRankAscending(diamonds)

@@ -1,28 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8" />
     <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
-    <title>Go HTMX</title>
+    <title>Black Queen</title>
 </head>
 <body>
-    <h1 class="text-3x1 font-bold underline">hello</h1>
-    <ul id="todo-list">
-        {{range .Todos}}
+    <h1 class="text-3x1 font-bold underline">Card Deck</h1>
 
-        {{block "todo-list-element" .}}
+    <div class="max-w-5xl mx-auto">
+        <h1 class="text-3xl text-white font-bold mb-6">Card Deck</h1>
 
-        <li>{{.Message}}</li>
-        {{end}}
-        {{end}}
-    </ul>
+        <!-- Add Card Button -->
+        <button
+                class="bg-white text-green-800 font-semibold px-6 py-2 rounded shadow mb-6 hover:bg-gray-100"
+                hx-get="/new-card"
+                hx-target="#card-deck"
+                hx-swap="beforeend"
+        >
+            Draw Card
+        </button>
 
-    <form hx-swap="beforeend" hx-target="#todo-list" hx-post="/add-todo">
-        <label for="message">Message:</label>
-        <input type="text" id="message" name="message"/>
-        <button type="submit">Create</button>
-    </form>
+        <!-- Deck Display -->
+        <div id="card-deck" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
+            <!-- Cards will appear here -->
+            {{ template "new-card.html" .}}
+        </div>
+    </div>
+
+
+<!--    {{ template "todo-list.html" .}}-->
+<!--    <form hx-swap="beforeend" hx-target="#todo-list" hx-post="/add-todo">-->
+<!--        <label for="message">Message:</label>-->
+<!--        <input type="text" id="message" name="message"/>-->
+<!--        <button class="button" type="submit">Create</button>-->
+<!--    </form>-->
+
+
+
+
 </body>
 </html>

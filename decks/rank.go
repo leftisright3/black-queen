@@ -28,11 +28,11 @@ func GetRankValueAsString(r Rank) string {
 	if r >= Two && r <= Ten {
 		return strconv.Itoa(int(r))
 	} else if r == Jack {
-		return "Jack"
+		return "J"
 	} else if r == Queen {
-		return "Queen"
+		return "Q"
 	} else if r == King {
-		return "King"
+		return "K"
 	}
-	return "Ace"
+	return "A"
 }

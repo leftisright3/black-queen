@@ -1,0 +1,9 @@
+<ul id="todo-list">
+  {{range .Todos}}
+
+  {{block "todo-list-element" .}}
+
+  <li>{{.Message}}</li>
+  {{end}}
+  {{end}}
+</ul>

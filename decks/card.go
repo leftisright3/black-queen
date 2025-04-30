@@ -15,7 +15,7 @@ func (c Card) String() string {
 }
 
 func (c Card) ShortString() string {
-	str := fmt.Sprintf("%s-%s", GetRankValueAsString(c.Rank), c.Suit.SingleString())
+	str := fmt.Sprintf("%s%s", GetRankValueAsString(c.Rank), c.Suit.SingleString())
 	return str
 }
 
