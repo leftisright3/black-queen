@@ -11,40 +11,19 @@ import (
 //TIP <p>To run your code, right-click the code and select <b>Run</b>.</p> <p>Alternatively, click
 // the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> menu item from here.</p>
 
-type Todo struct {
-	Id      int
-	Message string
+type NewCard struct {
+	CardUrl string
 }
 
 func main() {
-
-	//data := map[string][]Todo{
-	//	"Todos": {
-	//		Todo{Id: 1, Message: "Buy Milk"},
-	//		Todo{Id: 2, Message: "Buy Eggs"},
-	//	},
-	//}
-	//
-	//todosHandler := func(w http.ResponseWriter, r *http.Request) {
-	//	templ := template.Must(template.ParseFiles("index.html", "partials/todo-list.html"))
-	//	templ.Execute(w, data)
-	//}
-	//
-	//addTodosHandler := func(w http.ResponseWriter, r *http.Request) {
-	//	message := r.PostFormValue("message")
-	//	templ := template.Must(template.ParseFiles("index.html"))
-	//	todo := Todo{Id: len(data["Todos"]) + 1, Message: message}
-	//	//data["Todos"] = append(data["Todos"], todo)
-	//	templ.ExecuteTemplate(w, "todo-list-element", todo)
-	//}
 
 	var blackqueen game.Game
 	blackqueen.Init()
 	cardUrl := "https://deckofcardsapi.com/static/img/"
 
 	cardDeckHandler := func(w http.ResponseWriter, r *http.Request) {
-		templ := template.Must(template.ParseFiles("index.html", "partials/new-card.html"))
-		err := templ.Execute(w, nil)
+		templ := template.Must(template.ParseFiles("index.html", "partials/card-deck.html", "partials/new-card.html"))
+		err := templ.Execute(w, NewCard{CardUrl: "https://deckofcardsapi.com/static/img/AS.png"})
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -53,9 +32,18 @@ func main() {
 
 	drawCardHandler := func(w http.ResponseWriter, r *http.Request) {
 		card := decks.DrawCard(blackqueen.Deck.Cards)
-		data := cardUrl + card.ShortString() + ".png"
-		templ := template.Must(template.ParseFiles("index.html", "partials/card-deck.html", "partials/new-card.html"))
-		templ.Execute(w, data)
+		data := NewCard{
+			CardUrl: cardUrl + card.ShortString() + ".png",
+		}
+		templ := template.Must(template.ParseFiles("partials/new-card.html"))
+		err := templ.Execute(w, data)
+		//w.Header().Set("Content-Type", "text/html")
+		//_, err := w.Write([]byte(``))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
 	}
 
 	http.HandleFunc("/", cardDeckHandler)
